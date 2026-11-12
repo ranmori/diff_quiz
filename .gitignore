@@ -1,0 +1,15 @@
+# Your answers and the hook's log — local state, not shared
+diffquiz/data/
+
+__pycache__/
+*.pyc
+
+# Hook registration: paths are absolute and machine-specific
+.claude/settings.local.json
+
+.venv/
+venv/
+env/
+.idea/
+.vscode/
+.DS_Store
