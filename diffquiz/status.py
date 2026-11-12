@@ -17,6 +17,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import store  # noqa: E402
 
+QUIZ = Path(__file__).resolve().parent / "quiz.py"
+
+
+def quiz_hint(cwd: str) -> str:
+    """The command that actually works from *this* directory.
+
+    The hint used to be the literal "py diffquiz/quiz.py", which is only right
+    when your cwd happens to be the project's parent. Move the install, or run
+    a session anywhere else, and the hook confidently prints a command that
+    fails. Derive it from __file__ instead: relative when that reads nicely,
+    absolute when it has to.
+    """
+    try:
+        return f"py {QUIZ.relative_to(Path(cwd).resolve()).as_posix()}"
+    except (ValueError, OSError):
+        return f"py {QUIZ.as_posix()}"
+
 
 def main() -> int:
     payload = {}
@@ -40,7 +57,7 @@ def main() -> int:
     if due:
         bits.append(f"{due} due for review")
     print(json.dumps({
-        "systemMessage": f"Diff Quiz: {' · '.join(bits)} — py diffquiz/quiz.py",
+        "systemMessage": f"Diff Quiz: {' · '.join(bits)} — {quiz_hint(cwd)}",
     }))
     return 0
 
